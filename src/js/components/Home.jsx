@@ -25,7 +25,56 @@ useEffect(() => {
   getTodos();
 }, []);
 
-    const [data, setData] = useState("");
+const createTodo = () => {
+  const newTask= {
+    
+  "label": "hacer la cama",
+  "is_done": false
+};
+  
+fetch ("https://playground.4geeks.com/todo/todos/cgerc", {
+  method: "POST"
+  headers: {
+    "Content-Type":"application/json"
+  },
+ })
+  .then((respuesta) => {
+      return respuesta.json();
+    })
+    .then((data) => {
+      setTasks(data.todos);
+    })
+    .catch((error) => console.log(error));
+};
+
+console.log(Todos);
+
+import React from 'react'
+
+const actTareas = () => {
+  fetch ("https://playground.4geeks.com/todo/users/cgerc", {
+  method: GET
+  headers:{
+    "Content-Type": "application/json",
+  },
+  })
+  .then((data)=> {
+    setTasks(data.todos);
+  })
+  .catch((error)=> console.log(error));
+  };
+  console.log(Todos);
+  get actTareas();
+})
+
+
+
+
+const deleteTodo = ()=>{
+
+ }    
+ 
+ const [data, setData] = useState("");
   const [tasks, setTasks] = useState([]);
   const handleChange = (event) => {
     setData(event.target.value);
