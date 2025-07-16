@@ -3,7 +3,36 @@ import React, { useState, useEffect } from "react";
 
 
 const Home = () => {
+  const [data, setData] = useState("");
+  const [tasks, setTasks] = useState([]);
   const [users, setUsers] = useState([]);
+
+  const createUser = async () => {
+    try {
+      const response = await fetch(
+        "https://playground.4geeks.com/apis/fake/todos/user/cgerc",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify([]),
+        }
+      );
+      if (response.ok) {
+        console.log("Usuario cgerc creado exitosamente");
+        getTodos();
+      } else {
+        console.error("Error al crear usuario");
+      }
+    } catch (error) {
+      console.error("Error en createUser:", error);
+    }
+  };
+
+
+
+
   const getTodos = () => {
     fetch("https://playground.4geeks.com/todo/users/cgerc", {
       method: "GET",
@@ -11,71 +40,66 @@ const Home = () => {
         "Content-Type": "application/json",
       },
     })
-  .then((respuesta) => {
-      return respuesta.json();
-    })
-    .then((data) => {
-      setUsers(data.todos);
-    })
-    .catch((error) => console.log(error));
-};
-
-console.log(Todos);
-useEffect(() => {
-  getTodos();
-}, []);
-
-const createTodo = () => {
-  const newTask= {
-    
-  "label": "hacer la cama",
-  "is_done": false
-};
-  
-fetch ("https://playground.4geeks.com/todo/todos/cgerc", {
-  method: "POST"
-  headers: {
-    "Content-Type":"application/json"
-  },
- })
-  .then((respuesta) => {
-      return respuesta.json();
-    })
-    .then((data) => {
-      setTasks(data.todos);
-    })
-    .catch((error) => console.log(error));
-};
-
-console.log(Todos);
-
-import React from 'react'
-
-const actTareas = () => {
-  fetch ("https://playground.4geeks.com/todo/users/cgerc", {
-  method: GET
-  headers:{
-    "Content-Type": "application/json",
-  },
-  })
-  .then((data)=> {
-    setTasks(data.todos);
-  })
-  .catch((error)=> console.log(error));
+      .then((respuesta) => {
+        return respuesta.json();
+      })
+      .then((data) => {
+        setTasks(data.todos);
+        console.log(data);
+      })
+      .catch((error) => console.log(error));
   };
-  console.log(Todos);
-  get actTareas();
-})
+
+
+  useEffect(() => {
+    getTodos();
+  }, []);
+
+  const createTodo = () => {
+    console.log(data)
+    fetch("https://playground.4geeks.com/todo/todos/cgerc", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "label": data,
+        "is_done": false
+      }),
+    })
+      .then((respuesta) => {
+        return respuesta.json();
+
+      })
+      .then((data) => {
+        console.log(data)
+        getTodos();
+
+      })
+      .catch((error) => console.log(error));
+  };
+
+
+
+  const actTareas = () => {
+    fetch("https://playground.4geeks.com/todo/users/cgerc", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((data) => {
+        setTasks(data.todos);
+      })
+      .catch((error) => console.log(error));
+  };
 
 
 
 
-const deleteTodo = ()=>{
 
- }    
- 
- const [data, setData] = useState("");
-  const [tasks, setTasks] = useState([]);
+
+
   const handleChange = (event) => {
     setData(event.target.value);
   };
@@ -83,7 +107,7 @@ const deleteTodo = ()=>{
   const handleKeyPress = (event) => {
     if (event.key === "Enter") {
       event.preventDefault();
-      addTask();
+      createTodo();
     }
   };
 
@@ -145,6 +169,7 @@ const deleteTodo = ()=>{
     </div>
   );
 };
+
 
 export default Home;
 
