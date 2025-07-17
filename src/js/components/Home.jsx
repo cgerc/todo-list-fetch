@@ -30,9 +30,6 @@ const Home = () => {
     }
   };
 
-
-
-
   const getTodos = () => {
     fetch("https://playground.4geeks.com/todo/users/cgerc", {
       method: "GET",
@@ -52,11 +49,12 @@ const Home = () => {
 
 
   useEffect(() => {
+   // createUser();
     getTodos();
   }, []);
 
   const createTodo = () => {
-    console.log(data)
+
     fetch("https://playground.4geeks.com/todo/todos/cgerc", {
       method: "POST",
       headers: {
@@ -79,20 +77,28 @@ const Home = () => {
       .catch((error) => console.log(error));
   };
 
-
-
-  const actTareas = () => {
-    fetch("https://playground.4geeks.com/todo/users/cgerc", {
-      method: "GET",
+  const deleteTodo = (id, index) => {
+    fetch("https://playground.4geeks.com/todo/todos/" + id, {
+      method: "DELETE",
       headers: {
-        "Content-Type": "application/json",
-      },
+        "Content-Type": "application/json"
+      }
     })
-      .then((data) => {
-        setTasks(data.todos);
+
+      .then(respuesta => {
+        if (respuesta.ok) {
+          setTasks((prev) => prev.filter((task) => task.id !== id));
+        }
+        console.log(respuesta.status)
       })
       .catch((error) => console.log(error));
-  };
+
+  }
+
+
+
+
+
 
 
 
@@ -156,7 +162,7 @@ const Home = () => {
               <span>{task.label}</span>
               <button
                 className="btn btn-danger btn-sm ms-auto delete-btn"
-                onClick={() => removeTask(task.id)}
+                onClick={() => deleteTodo(task.id)}
                 aria-label="Eliminar tarea"
               >
                 🗑️
