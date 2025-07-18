@@ -5,30 +5,27 @@ import React, { useState, useEffect } from "react";
 const Home = () => {
   const [data, setData] = useState("");
   const [tasks, setTasks] = useState([]);
-  const [users, setUsers] = useState([]);
+ 
 
-  const createUser = async () => {
-    try {
-      const response = await fetch(
-        "https://playground.4geeks.com/apis/fake/todos/user/cgerc",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify([]),
-        }
-      );
+const createUser = () => {
+  fetch("https://playground.4geeks.com/todo/users/cgerc", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify([]),
+  })
+    .then((response) => {
       if (response.ok) {
         console.log("Usuario cgerc creado exitosamente");
         getTodos();
       } else {
-        console.error("Error al crear usuario");
+        getTodos();
       }
-    } catch (error) {
-      console.error("Error en createUser:", error);
-    }
-  };
+    })
+    .catch((error) => console.error("Error en createUser:", error));
+};
+
 
   const getTodos = () => {
     fetch("https://playground.4geeks.com/todo/users/cgerc", {
@@ -47,11 +44,6 @@ const Home = () => {
       .catch((error) => console.log(error));
   };
 
-
-  useEffect(() => {
-   // createUser();
-    getTodos();
-  }, []);
 
   const createTodo = () => {
 
@@ -88,6 +80,7 @@ const Home = () => {
       .then(respuesta => {
         if (respuesta.ok) {
           setTasks((prev) => prev.filter((task) => task.id !== id));
+          getTodos();
         }
         console.log(respuesta.status)
       })
@@ -95,13 +88,9 @@ const Home = () => {
 
   }
 
-
-
-
-
-
-
-
+  useEffect(() => {
+   createUser();
+  }, []);
 
 
 
